@@ -13,10 +13,17 @@ export const ProfileContainer = styled.div`
 `;
 
 export const ProfileAvatar = styled.div`
+  position: relative;
   height: 32px;
   aspect-ratio: 1/1;
-  background-color: blue;
   border-radius: 50%;
+  overflow: hidden;
+`;
+
+export const ProfileDummyAvatar = styled.div`
+  background-color: blue;
+  height: 100%;
+  width: 100%;
 `;
 
 export const ProfileContent = styled.div`

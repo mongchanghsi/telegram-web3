@@ -15,7 +15,7 @@ export const NavigationContainer = styled.nav`
 
 export const NavigationLogo = styled.div`
   position: relative;
-  height: 18px;
+  height: 32px;
   aspect-ratio: 1/1;
 `;
 
@@ -24,7 +24,7 @@ export const NavigationWallet = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  gap: 12px;
+  gap: 24px;
 `;
 
 export const NavigationAddress = styled.p`
@@ -39,4 +39,8 @@ export const NavigationDisconnect = styled.button`
   position: relative;
   height: 18px;
   aspect-ratio: 1/1;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
 `;

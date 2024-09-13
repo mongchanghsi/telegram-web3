@@ -5,6 +5,12 @@ import React, { useEffect, useState } from "react";
 import { PropsWithChildren } from "react";
 import { useCloudStorage } from "@telegram-apps/sdk-react";
 
+export enum AUTH_STATUS {
+  UNKNOWN = "UNKNOWN",
+  SUCCESS = "SUCCESS",
+  FAILURE = "FAILURE",
+}
+
 const STORAGE_USER_LABEL = "user";
 
 type User = {
@@ -16,8 +22,8 @@ type State = {
   setUser: (user: User | null) => void;
   loading: boolean;
   disconnect: () => void;
-  authStatus: string;
-  setAuthStatus: (status: string) => void;
+  authStatus: AUTH_STATUS;
+  setAuthStatus: (status: AUTH_STATUS) => void;
   storeUser: (account: string) => void;
 };
 
@@ -27,14 +33,19 @@ const UserProvider = ({ children }: PropsWithChildren) => {
   const storage = useCloudStorage();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [authStatus, setAuthStatus] = useState<string>("");
+  const [authStatus, setAuthStatus] = useState<AUTH_STATUS>(
+    AUTH_STATUS.UNKNOWN
+  );
 
   const loadUser = async () => {
     setLoading(true);
     try {
       if (!storage) return;
       const storedUser = await storage.get(STORAGE_USER_LABEL);
-      if (storedUser) setUser(JSON.parse(storedUser));
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        setAuthStatus(AUTH_STATUS.SUCCESS);
+      }
     } catch (error) {
       console.error("Error loading user:", error);
     }

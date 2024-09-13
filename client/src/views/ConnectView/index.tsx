@@ -14,7 +14,7 @@ import {
 } from "./style";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { useUser } from "@/context/UserContext";
+import { AUTH_STATUS, useUser } from "@/context/UserContext";
 import { shortenAddress } from "@/utils/address";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -30,7 +30,7 @@ const ConnectView = () => {
   const {
     user,
     setUser,
-    loading,
+    loading: checkingUser,
     authStatus,
     setAuthStatus,
     disconnect,
@@ -47,7 +47,7 @@ const ConnectView = () => {
       const accounts = await sdk.connect();
       if (Array.isArray(accounts) && accounts.length) {
         const _account = accounts[0];
-        setAuthStatus("success");
+        setAuthStatus(AUTH_STATUS.SUCCESS);
         setUser({
           public_key: _account,
         });
@@ -63,33 +63,33 @@ const ConnectView = () => {
 
   const handleDisconnect = async () => {
     await sdk?.terminate();
-    setAuthStatus("");
+    setAuthStatus(AUTH_STATUS.UNKNOWN);
     disconnect();
     toast.success("Disconnected!");
   };
 
   useEffect(() => {
-    if (user && !authStatus) {
+    if (user && user.public_key && authStatus === AUTH_STATUS.SUCCESS) {
       router.push(NAVIGATION.DASHBOARD);
     } else if (
       launchParams &&
       launchParams.startParam === "success" &&
-      authStatus !== "success"
+      authStatus !== AUTH_STATUS.SUCCESS
     ) {
       if (initData?.user?.id)
         fetch(`/api/auth/${initData.user.id}`).then((res) => {
           if (res.ok) {
             res.json().then((data) => {
               storage.set("user", JSON.stringify(data));
-              setAuthStatus("success");
+              setAuthStatus(AUTH_STATUS.SUCCESS);
               setUser(data);
             });
           }
         });
     } else if (launchParams && launchParams.startParam === "failure") {
-      setAuthStatus("failure");
+      setAuthStatus(AUTH_STATUS.FAILURE);
     }
-  }, [launchParams, initData?.user?.id, user, router]);
+  }, [launchParams, initData?.user?.id, user?.public_key, router]);
 
   return (
     <ConnectViewContainer>
@@ -113,30 +113,36 @@ const ConnectView = () => {
         </>
       )}
 
-      {connecting ? (
-        <>
-          <Button label={"Loading"} />
-        </>
+      {checkingUser ? (
+        <ConnectViewDescription>Loading</ConnectViewDescription>
       ) : (
         <>
-          {user ? (
+          {connecting ? (
             <>
-              <ConnectViewDescription>
-                {shortenAddress(user.public_key)}
-              </ConnectViewDescription>
-              <Button label={"Disconnect"} onClick={handleDisconnect} />
+              <Button label={"Loading"} />
             </>
           ) : (
             <>
-              {sdk && sdk.isInitialized() && (
+              {user ? (
                 <>
                   <ConnectViewDescription>
-                    Click connect to get started
+                    {shortenAddress(user.public_key)}
                   </ConnectViewDescription>
-                  <Button
-                    label={"Connect to Metamask"}
-                    onClick={handleConnect}
-                  />
+                  <Button label={"Disconnect"} onClick={handleDisconnect} />
+                </>
+              ) : (
+                <>
+                  {sdk && sdk.isInitialized() && (
+                    <>
+                      <ConnectViewDescription>
+                        Click connect to get started
+                      </ConnectViewDescription>
+                      <Button
+                        label={"Connect to Metamask"}
+                        onClick={handleConnect}
+                      />
+                    </>
+                  )}
                 </>
               )}
             </>

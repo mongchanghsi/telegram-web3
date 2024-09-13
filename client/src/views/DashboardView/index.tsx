@@ -1,5 +1,7 @@
+import Profile from "@/components/Profile";
+
 const DashboardView = () => {
-  return <div>Connected</div>;
+  return <Profile />;
 };
 
 export default DashboardView;

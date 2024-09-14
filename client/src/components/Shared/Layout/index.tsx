@@ -6,8 +6,15 @@ import { useEffect, useRef, useState } from "react";
 import { useUser } from "@/context/UserContext";
 import Navigation from "../Navigation";
 import BottomNavigation from "../Navigation/BottomNavigation";
+import ENVIRONMENT from "@/configuration/environment";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    if (ENVIRONMENT.DEBUG_MODE) {
+      import("eruda").then((lib) => lib.default.init());
+    }
+  }, [ENVIRONMENT.DEBUG_MODE]);
+
   const { user } = useUser();
   const navigationRef = useRef<HTMLDivElement>(null);
   const [navigationOffset, setNavigationOffset] = useState<number>(0);

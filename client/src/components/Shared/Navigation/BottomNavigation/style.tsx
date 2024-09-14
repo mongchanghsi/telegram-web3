@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const BottomNavigationContainer = styled.footer`
   position: absolute;
@@ -9,6 +9,10 @@ export const BottomNavigationContainer = styled.footer`
 
   display: flex;
   align-items: center;
+
+  ${({ theme }) => css`
+    border-top: 1px solid ${theme.light};
+  `};
 `;
 
 export const BottomNavigationItem = styled.div`
@@ -21,9 +25,16 @@ export const BottomNavigationItem = styled.div`
   gap: 12px;
   padding: 12px;
   padding-bottom: 36px;
-  background-color: red;
+
+  ${({ theme }) => css`
+    background: ${theme.primary};
+  `};
 `;
 
 export const BottomNavigationItemLabel = styled.p`
   margin: 0;
+
+  ${({ theme }) => css`
+    color: ${theme.light};
+  `};
 `;

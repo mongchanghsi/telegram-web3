@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
 import { publicClient } from "@/utils/web3/viem";
 import { formatEther } from "viem";
 import { getEnsAvatar, getEnsName } from "@/utils/web3/ens";
-import { toast } from "react-hot-toast";
 import Image from "next/image";
 
 const Profile = () => {
@@ -26,21 +25,26 @@ const Profile = () => {
 
   const getBalance = async () => {
     if (!user || !user.public_key) return;
-    const _balance = await publicClient.getBalance({
-      address: user.public_key as `0x${string}`,
-    });
-    setBalance((+formatEther(_balance)).toFixed(4));
+
+    try {
+      const _balance = await publicClient.getBalance({
+        address: user.public_key as `0x${string}`,
+      });
+      setBalance((+formatEther(_balance)).toFixed(4));
+    } catch (error) {}
   };
 
   const fetchEnsData = async () => {
     if (!user || !user.public_key) return;
 
-    const _ensName = (await getEnsName(
-      user.public_key as `0x${string}`
-    )) as string;
-    setEnsName(_ensName);
-    const _ensAvatar = (await getEnsAvatar(_ensName)) as string;
-    setEnsAvatar(_ensAvatar);
+    try {
+      const _ensName = (await getEnsName(
+        user.public_key as `0x${string}`
+      )) as string;
+      setEnsName(_ensName);
+      const _ensAvatar = (await getEnsAvatar(_ensName)) as string;
+      setEnsAvatar(_ensAvatar);
+    } catch (error) {}
   };
 
   useEffect(() => {

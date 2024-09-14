@@ -15,8 +15,26 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <style jsx global>{`
+        html,
+        body,
+        #root {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          overscroll-behavior: none;
+        }
+
+        #root {
+          /* Preserve scrolling behavior */
+          overflow-y: auto;
+        }
+
         html {
           font-family: ${BaseFont.style.fontFamily};
+        }
+
+        body {
+          margin: 0;
         }
 
         input,

@@ -5,22 +5,38 @@ import { LayoutContainer, LayoutContent } from "./style";
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "@/context/UserContext";
 import Navigation from "../Navigation";
+import BottomNavigation from "../Navigation/BottomNavigation";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUser();
   const navigationRef = useRef<HTMLDivElement>(null);
   const [navigationOffset, setNavigationOffset] = useState<number>(0);
 
+  const bottomNavigationRef = useRef<HTMLDivElement>(null);
+  const [bottomNavigationOffset, setBottomNavigationOffset] =
+    useState<number>(0);
+
   useEffect(() => {
     setNavigationOffset(navigationRef.current?.clientHeight ?? 0);
-  }, [navigationRef.current]);
+    setBottomNavigationOffset(bottomNavigationRef.current?.clientHeight ?? 0);
+  }, [navigationRef.current, bottomNavigationRef.current]);
 
   return (
     <>
       <Meta />
-      {user && <Navigation ref={navigationRef} />}
+      {user && (
+        <>
+          <Navigation ref={navigationRef} />
+          <BottomNavigation ref={bottomNavigationRef} />
+        </>
+      )}
       <LayoutContainer>
-        <LayoutContent offset={navigationOffset}>{children}</LayoutContent>
+        <LayoutContent
+          topOffset={navigationOffset}
+          bottomOffset={bottomNavigationOffset}
+        >
+          {children}
+        </LayoutContent>
       </LayoutContainer>
     </>
   );

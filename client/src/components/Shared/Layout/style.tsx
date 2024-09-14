@@ -18,18 +18,33 @@ export const LayoutContainer = styled.div`
   `};
 `;
 
-export const LayoutContent = styled.div<{ offset: number }>`
+export const LayoutContent = styled.div<{
+  topOffset: number;
+  bottomOffset: number;
+}>`
   position: relative;
   width: 100%;
-  padding: 24px 48px;
+  padding: 12px 24px;
   box-sizing: border-box;
 
   overflow-y: auto;
   overflow-x: hidden;
 
-  ${({ offset }) => css`
-    min-height: calc(100vh - ${offset}px); /* old browsers */
-    min-height: calc(100dvh - ${offset}px); /* new browsers */
-    margin-top: ${offset}px;
+  ${({ topOffset, bottomOffset }) => css`
+    min-height: calc(
+      100vh - ${topOffset}px - ${bottomOffset}px
+    ); /* old browsers */
+    min-height: calc(
+      100dvh - ${topOffset}px - ${bottomOffset}px
+    ); /* new browsers */
+
+    max-height: calc(
+      100vh - ${topOffset}px - ${bottomOffset}px
+    ); /* old browsers */
+    max-height: calc(
+      100dvh - ${topOffset}px - ${bottomOffset}px
+    ); /* new browsers */
+
+    margin-top: ${topOffset}px;
   `}
 `;

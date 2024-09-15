@@ -1,13 +1,13 @@
 import { createPublicClient, createWalletClient, custom, http } from "viem";
-import { mainnet } from "viem/chains";
+import { sepolia } from "viem/chains";
 
 export const getWalletClient = () =>
   createWalletClient({
-    chain: mainnet,
+    chain: sepolia,
     transport: custom(window.ethereum!),
   });
 
 export const publicClient = createPublicClient({
-  chain: mainnet,
+  chain: sepolia,
   transport: http(),
 });

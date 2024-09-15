@@ -36,7 +36,11 @@ const SignMessage = () => {
       ) : (
         <Button label={"Sign Message"} onClick={handleSignMessage} />
       )}
-      <SignMessageText>Signature: {shortenAddress(signature)}</SignMessageText>
+      {signature && (
+        <SignMessageText>
+          Signature: {shortenAddress(signature)}
+        </SignMessageText>
+      )}
     </SignMessageContainer>
   );
 };

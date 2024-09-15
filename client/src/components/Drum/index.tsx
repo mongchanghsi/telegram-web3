@@ -5,14 +5,17 @@ import toast from "react-hot-toast";
 import Button from "../Shared/Button";
 import drumContract from "@/utils/web3/drum";
 import { shortenAddress } from "@/utils/address";
+import { useSDK } from "@metamask/sdk-react";
 
 const Drum = () => {
+  const { provider } = useSDK();
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleDrum = async () => {
+    if (!provider) return;
     setLoading(true);
     try {
-      const hash = await drumContract.drum();
+      const hash = await drumContract.drum(provider);
       if (hash) {
         toast.success(`Drummed! - ${shortenAddress(hash)}`);
       } else {

@@ -1,6 +1,7 @@
 import { getWalletClient, publicClient } from "./viem";
 import CONTRACT_ADDRESSES from "@/contracts/address.json";
 import DrumAbi from "@/contracts/Drum.json";
+import { SDKProvider } from "@metamask/sdk-react";
 
 class Drum {
   private async getDrumContractDetails(): Promise<{
@@ -17,10 +18,10 @@ class Drum {
     };
   }
 
-  async drum() {
+  async drum(provider: SDKProvider) {
     try {
       const client = publicClient;
-      const walletClient = getWalletClient();
+      const walletClient = getWalletClient(provider);
       const [account] = await walletClient.getAddresses();
       const contractDetails = await this.getDrumContractDetails();
 

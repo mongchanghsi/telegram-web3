@@ -5,8 +5,10 @@ import toast from "react-hot-toast";
 import Button from "../Shared/Button";
 import { SignMessageContainer, SignMessageText } from "./style";
 import { shortenAddress } from "@/utils/address";
+import { useSDK } from "@metamask/sdk-react";
 
 const SignMessage = () => {
+  const { provider } = useSDK();
   const { user } = useUser();
   const [signing, setSigning] = useState<boolean>(false);
   const [signature, setSignature] = useState<string>("");
@@ -14,7 +16,7 @@ const SignMessage = () => {
   const handleSignMessage = async () => {
     setSigning(true);
     try {
-      const walletClient = getWalletClient();
+      const walletClient = getWalletClient(provider);
       const _signature = await walletClient.signMessage({
         account: user?.public_key as `0x${string}`,
         message: "Hello World",
